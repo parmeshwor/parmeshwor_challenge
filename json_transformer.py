@@ -380,7 +380,7 @@ def parse_json_file(path):
 
 
 if __name__ == '__main__':
-    json_path = "input_file_original.json"
+    json_path = "input_file.json"
     result = parse_json_file(json_path)
     processed_json = process_json(result)
 
