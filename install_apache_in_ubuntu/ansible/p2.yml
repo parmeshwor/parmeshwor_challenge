@@ -1,0 +1,53 @@
+---
+- name: Install Apache and deploy Hello World site
+  hosts: web
+  remote_user: ubuntu
+  vars:
+    ansible_ssh_private_key_file: "~/.ssh/d/pthapa_aws_ec2_second"
+    site_name: "example.com"
+    site_path: "/var/www/html"
+    index_html_content: ""
+  become: yes
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Copy index.html file
+      copy:
+        src: "files/index.html"
+        dest: "{{ site_path }}/index.html"
+
+    - name: Ensure site directory exists
+      file:
+        path: "{{ site_path }}"
+        state: directory
+
+    - name: Configure Apache VirtualHost
+      template:
+        src: templates/apache_virtualhost.conf.j2
+        dest: "/etc/apache2/sites-available/{{ site_name }}.conf"
+      notify:
+        - Reload Apache
+
+    - name: Enable the site
+      apache2_module:
+        state: present
+        name: rewrite
+      notify:
+        - Enable Site
+
+  handlers:
+    - name: Reload Apache
+      service:
+        name: apache2
+        state: reloaded
+
+    - name: Enable Site
+      command: a2ensite "{{ site_name }}"
