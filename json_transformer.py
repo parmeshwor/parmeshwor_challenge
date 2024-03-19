@@ -193,6 +193,7 @@
 import json
 from pprint import pprint
 import re
+from dateutil import parser
 
 
 def process_object(obj):
@@ -220,7 +221,7 @@ def process_object(obj):
         if is_rfc3339_datetime(value):
             # convert to unix epoch time
             from datetime import datetime
-            from dateutil import parser
+
             dt = parser.parse(value)
             value = int(dt.timestamp())
         else:
