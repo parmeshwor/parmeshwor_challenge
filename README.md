@@ -11,6 +11,8 @@ python3 json_transformer.py
 cd install_apache_in_ubuntu
 sh run.sh
 
+deployed in aws : 
+http://34.233.135.83:80
 
 3. SEC challenge coding
 python3 credit_card_validation.py
